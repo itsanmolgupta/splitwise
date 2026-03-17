@@ -1,7 +1,7 @@
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { ArrowRight, Receipt, Users, Wallet, PieChart, Shield, Zap } from "lucide-react";
-import { motion } from "framer-motion";
+import { type Easing } from "framer-motion";
 
 const features = [
   {
