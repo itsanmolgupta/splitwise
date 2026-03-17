@@ -118,8 +118,8 @@ const SignupPage = () => {
                 required
               />
             </div>
-            <Button type="submit" className="w-full" size="lg">
-              Create Account
+            <Button type="submit" className="w-full" size="lg" disabled={loading}>
+              {loading ? "Creating account…" : "Create Account"}
             </Button>
           </form>
 

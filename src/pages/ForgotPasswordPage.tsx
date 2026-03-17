@@ -60,8 +60,8 @@ const ForgotPasswordPage = () => {
                   required
                 />
               </div>
-              <Button type="submit" className="w-full" size="lg">
-                Send Reset Link
+              <Button type="submit" className="w-full" size="lg" disabled={loading}>
+                {loading ? "Sending…" : "Send Reset Link"}
               </Button>
             </form>
           </>
