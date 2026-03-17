@@ -5,15 +5,26 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Wallet, ArrowLeft } from "lucide-react";
 import { motion } from "framer-motion";
+import { supabase } from "@/integrations/supabase/client";
+import { toast } from "@/hooks/use-toast";
 
 const ForgotPasswordPage = () => {
   const [email, setEmail] = useState("");
   const [submitted, setSubmitted] = useState(false);
+  const [loading, setLoading] = useState(false);
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    // TODO: Supabase password reset
-    setSubmitted(true);
+    setLoading(true);
+    const { error } = await supabase.auth.resetPasswordForEmail(email, {
+      redirectTo: `${window.location.origin}/reset-password`,
+    });
+    setLoading(false);
+    if (error) {
+      toast({ title: "Error", description: error.message, variant: "destructive" });
+    } else {
+      setSubmitted(true);
+    }
   };
 
   return (
@@ -49,8 +60,8 @@ const ForgotPasswordPage = () => {
                   required
                 />
               </div>
-              <Button type="submit" className="w-full" size="lg">
-                Send Reset Link
+              <Button type="submit" className="w-full" size="lg" disabled={loading}>
+                {loading ? "Sending…" : "Send Reset Link"}
               </Button>
             </form>
           </>
