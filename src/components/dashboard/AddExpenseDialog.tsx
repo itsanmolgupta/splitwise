@@ -83,11 +83,32 @@ const AddExpenseDialog = ({ open, onOpenChange }: AddExpenseDialogProps) => {
       return;
     }
     const fetchMembers = async () => {
-      const { data } = await supabase
+      // First get member user_ids
+      const { data: memberData } = await supabase
         .from("group_members")
-        .select("user_id, profiles!inner(full_name, email)")
-        .eq("group_id", selectedGroup) as any;
-      if (data) setMembers(data);
+        .select("user_id")
+        .eq("group_id", selectedGroup);
+      if (!memberData || memberData.length === 0) {
+        setMembers([]);
+        return;
+      }
+      // Then fetch profiles separately
+      const userIds = memberData.map((m) => m.user_id);
+      const { data: profileData } = await supabase
+        .from("profiles")
+        .select("user_id, full_name, email")
+        .in("user_id", userIds);
+      
+      const profileMap = new Map(
+        (profileData || []).map((p) => [p.user_id, p])
+      );
+      
+      setMembers(
+        memberData.map((m) => ({
+          user_id: m.user_id,
+          profiles: profileMap.get(m.user_id) || null,
+        }))
+      );
     };
     fetchMembers();
   }, [selectedGroup]);
