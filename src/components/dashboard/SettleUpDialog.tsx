@@ -69,7 +69,7 @@ const SettleUpDialog = ({ open, onOpenChange }: SettleUpDialogProps) => {
         }
 
         // Get payer names
-        const payerIds = [...new Set(rawSplits.map((s: any) => s.expenses.paid_by))];
+        const payerIds = [...new Set(rawSplits.map((s: any) => s.expenses.paid_by))] as string[];
         const { data: profiles } = await supabase
           .from("profiles")
           .select("user_id, full_name, email")
