@@ -250,7 +250,6 @@ const RecentExpenses = () => {
                       ))}
                     </div>);
                   })()}
-                  )}
                 </motion.div>
               ))}
             </div>
