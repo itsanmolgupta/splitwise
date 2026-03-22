@@ -227,13 +227,15 @@ const RecentExpenses = () => {
                     )}
                   </div>
 
-                  {activity.splits.length > 0 && (
+                  {(() => {
+                    const oweSplits = activity.splits.filter((s) => s.user_id !== activity.paid_by_id);
+                    return oweSplits.length > 0 && (
                     <div className="mt-2 ml-12 space-y-1">
                       <div className="flex items-center gap-1 text-[11px] text-muted-foreground mb-1">
                         <Users className="h-3 w-3" />
-                        <span>Split between {activity.splits.length} {activity.splits.length === 1 ? "person" : "people"}</span>
+                        <span>Split with {oweSplits.length} {oweSplits.length === 1 ? "person" : "people"}</span>
                       </div>
-                      {activity.splits.map((split) => (
+                      {oweSplits.map((split) => (
                         <div key={split.user_id} className="flex items-center gap-2 text-xs">
                           <ArrowRight className="h-3 w-3 text-muted-foreground shrink-0" />
                           <span className="text-foreground font-medium truncate">{split.user_name}</span>
@@ -246,7 +248,8 @@ const RecentExpenses = () => {
                           )}
                         </div>
                       ))}
-                    </div>
+                    </div>);
+                  })()}
                   )}
                 </motion.div>
               ))}
