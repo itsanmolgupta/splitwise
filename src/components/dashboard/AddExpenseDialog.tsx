@@ -239,6 +239,7 @@ const AddExpenseDialog = ({ open, onOpenChange }: AddExpenseDialogProps) => {
           group_id: selectedGroup,
           paid_by: user.id,
           split_type: splitType,
+          category_id: selectedCategory || null,
         })
         .select()
         .single();
@@ -298,6 +299,7 @@ const AddExpenseDialog = ({ open, onOpenChange }: AddExpenseDialogProps) => {
     setTitle("");
     setAmount("");
     setSelectedGroup("");
+    setSelectedCategory("");
     setSplitType("equal");
     setSplits([]);
   };
