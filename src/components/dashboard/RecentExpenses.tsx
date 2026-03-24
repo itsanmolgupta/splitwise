@@ -13,6 +13,7 @@ import {
 import { toast } from "sonner";
 import { useQueryClient } from "@tanstack/react-query";
 import EditExpenseDialog from "./EditExpenseDialog";
+import CategoryIcon from "./CategoryIcon";
 
 interface SplitDetail {
   user_id: string;
@@ -34,6 +35,10 @@ interface ActivityItem {
   paid_by_name: string;
   paid_by_id: string;
   isPaidByMe: boolean;
+  category_id: string | null;
+  category_name: string | null;
+  category_icon: string | null;
+  category_color: string | null;
   splits: SplitDetail[];
 }
 
@@ -58,7 +63,7 @@ const RecentExpenses = () => {
     const groupIds = memberships.map((m) => m.group_id);
     const { data: expensesData } = await supabase
       .from("expenses")
-      .select("id, title, amount, currency, expense_date, paid_by, group_id, split_type, groups(name)")
+      .select("id, title, amount, currency, expense_date, paid_by, group_id, split_type, category_id, groups(name), categories(name, icon, color)")
       .in("group_id", groupIds)
       .order("expense_date", { ascending: false })
       .limit(10);
@@ -98,6 +103,10 @@ const RecentExpenses = () => {
         paid_by_name: getName(e.paid_by),
         paid_by_id: e.paid_by,
         isPaidByMe: e.paid_by === user.id,
+        category_id: e.category_id,
+        category_name: e.categories?.name ?? null,
+        category_icon: e.categories?.icon ?? null,
+        category_color: e.categories?.color ?? null,
         splits: (splitsData ?? [])
           .filter((s) => s.expense_id === e.id)
           .map((s) => ({
