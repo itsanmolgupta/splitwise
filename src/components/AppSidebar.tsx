@@ -31,7 +31,7 @@ export function AppSidebar() {
         {/* Logo */}
         <SidebarMenu>
           <SidebarMenuItem>
-            <SidebarMenuButton asChild className="hover:bg-transparent active:bg-transparent group-data-[collapsible=icon]:!size-10 group-data-[collapsible=icon]:!p-0 group-data-[collapsible=icon]:justify-center">
+            <SidebarMenuButton asChild className="hover:bg-transparent active:bg-transparent group-data-[collapsible=icon]:!size-10 group-data-[collapsible=icon]:!p-0 group-data-[collapsible=icon]:!pl-1 group-data-[collapsible=icon]:justify-center">
               <div className="flex items-center justify-center gap-2">
                 <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-primary">
                   <Wallet className="h-4 w-4 text-primary-foreground" />
