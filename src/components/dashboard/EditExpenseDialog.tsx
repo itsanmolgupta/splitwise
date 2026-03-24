@@ -9,9 +9,14 @@ import {
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import {
+  Select, SelectContent, SelectItem, SelectTrigger, SelectValue,
+} from "@/components/ui/select";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Switch } from "@/components/ui/switch";
 import { Loader2, AlertCircle } from "lucide-react";
+import { useCategories } from "@/hooks/useCategories";
+import CategoryIcon from "@/components/dashboard/CategoryIcon";
 
 type SplitType = "equal" | "percentage" | "custom";
 
@@ -32,14 +37,17 @@ interface EditExpenseDialogProps {
     split_type: string;
     group_id: string;
     paid_by: string;
+    category_id?: string | null;
   } | null;
 }
 
 const EditExpenseDialog = ({ open, onOpenChange, expense }: EditExpenseDialogProps) => {
   const { user } = useAuth();
   const queryClient = useQueryClient();
+  const { categories } = useCategories();
   const [title, setTitle] = useState("");
   const [amount, setAmount] = useState("");
+  const [selectedCategory, setSelectedCategory] = useState("");
   const [splitType, setSplitType] = useState<SplitType>("equal");
   const [splits, setSplits] = useState<SplitEntry[]>([]);
   const [members, setMembers] = useState<{ user_id: string; name: string }[]>([]);
@@ -55,6 +63,7 @@ const EditExpenseDialog = ({ open, onOpenChange, expense }: EditExpenseDialogPro
     setTitle(expense.title);
     setAmount(String(expense.amount));
     setSplitType(expense.split_type as SplitType);
+    setSelectedCategory(expense.category_id || "");
 
     const loadData = async () => {
       // Fetch members
@@ -153,7 +162,7 @@ const EditExpenseDialog = ({ open, onOpenChange, expense }: EditExpenseDialogPro
       // Update expense
       const { error: expError } = await supabase
         .from("expenses")
-        .update({ title: title.trim(), amount: numAmount, split_type: splitType })
+        .update({ title: title.trim(), amount: numAmount, split_type: splitType, category_id: selectedCategory || null })
         .eq("id", expense.id);
       if (expError) throw expError;
 
@@ -229,6 +238,24 @@ const EditExpenseDialog = ({ open, onOpenChange, expense }: EditExpenseDialogPro
           <div className="space-y-2">
             <Label htmlFor="edit-title">Title</Label>
             <Input id="edit-title" value={title} onChange={(e) => setTitle(e.target.value)} required />
+          </div>
+          <div className="space-y-2">
+            <Label>Category</Label>
+            <Select value={selectedCategory} onValueChange={setSelectedCategory}>
+              <SelectTrigger>
+                <SelectValue placeholder="Select a category (optional)" />
+              </SelectTrigger>
+              <SelectContent>
+                {categories.map((c) => (
+                  <SelectItem key={c.id} value={c.id}>
+                    <div className="flex items-center gap-2">
+                      <CategoryIcon iconName={c.icon} color={c.color} size={14} />
+                      <span>{c.name}</span>
+                    </div>
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
           </div>
           <div className="space-y-2">
             <Label htmlFor="edit-amount">Amount ($)</Label>

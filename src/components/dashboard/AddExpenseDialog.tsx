@@ -24,6 +24,8 @@ import {
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Switch } from "@/components/ui/switch";
 import { Loader2, AlertCircle } from "lucide-react";
+import { useCategories } from "@/hooks/useCategories";
+import CategoryIcon from "@/components/dashboard/CategoryIcon";
 
 interface Group {
   id: string;
@@ -52,8 +54,10 @@ interface AddExpenseDialogProps {
 const AddExpenseDialog = ({ open, onOpenChange }: AddExpenseDialogProps) => {
   const { user } = useAuth();
   const queryClient = useQueryClient();
+  const { categories } = useCategories();
   const [groups, setGroups] = useState<Group[]>([]);
   const [selectedGroup, setSelectedGroup] = useState("");
+  const [selectedCategory, setSelectedCategory] = useState("");
   const [members, setMembers] = useState<GroupMember[]>([]);
   const [title, setTitle] = useState("");
   const [amount, setAmount] = useState("");
@@ -235,6 +239,7 @@ const AddExpenseDialog = ({ open, onOpenChange }: AddExpenseDialogProps) => {
           group_id: selectedGroup,
           paid_by: user.id,
           split_type: splitType,
+          category_id: selectedCategory || null,
         })
         .select()
         .single();
@@ -294,6 +299,7 @@ const AddExpenseDialog = ({ open, onOpenChange }: AddExpenseDialogProps) => {
     setTitle("");
     setAmount("");
     setSelectedGroup("");
+    setSelectedCategory("");
     setSplitType("equal");
     setSplits([]);
   };
@@ -356,6 +362,26 @@ const AddExpenseDialog = ({ open, onOpenChange }: AddExpenseDialogProps) => {
               <SelectContent>
                 {groups.map((g) => (
                   <SelectItem key={g.id} value={g.id}>{g.name}</SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+          </div>
+
+          {/* Category */}
+          <div className="space-y-2">
+            <Label>Category</Label>
+            <Select value={selectedCategory} onValueChange={setSelectedCategory}>
+              <SelectTrigger>
+                <SelectValue placeholder="Select a category (optional)" />
+              </SelectTrigger>
+              <SelectContent>
+                {categories.map((c) => (
+                  <SelectItem key={c.id} value={c.id}>
+                    <div className="flex items-center gap-2">
+                      <CategoryIcon iconName={c.icon} color={c.color} size={14} />
+                      <span>{c.name}</span>
+                    </div>
+                  </SelectItem>
                 ))}
               </SelectContent>
             </Select>

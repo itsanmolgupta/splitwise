@@ -13,6 +13,7 @@ import {
 import { toast } from "sonner";
 import { useQueryClient } from "@tanstack/react-query";
 import EditExpenseDialog from "./EditExpenseDialog";
+import CategoryIcon from "./CategoryIcon";
 
 interface SplitDetail {
   user_id: string;
@@ -34,6 +35,10 @@ interface ActivityItem {
   paid_by_name: string;
   paid_by_id: string;
   isPaidByMe: boolean;
+  category_id: string | null;
+  category_name: string | null;
+  category_icon: string | null;
+  category_color: string | null;
   splits: SplitDetail[];
 }
 
@@ -58,7 +63,7 @@ const RecentExpenses = () => {
     const groupIds = memberships.map((m) => m.group_id);
     const { data: expensesData } = await supabase
       .from("expenses")
-      .select("id, title, amount, currency, expense_date, paid_by, group_id, split_type, groups(name)")
+      .select("id, title, amount, currency, expense_date, paid_by, group_id, split_type, category_id, groups(name), categories(name, icon, color)")
       .in("group_id", groupIds)
       .order("expense_date", { ascending: false })
       .limit(10);
@@ -98,6 +103,10 @@ const RecentExpenses = () => {
         paid_by_name: getName(e.paid_by),
         paid_by_id: e.paid_by,
         isPaidByMe: e.paid_by === user.id,
+        category_id: e.category_id,
+        category_name: e.categories?.name ?? null,
+        category_icon: e.categories?.icon ?? null,
+        category_color: e.categories?.color ?? null,
         splits: (splitsData ?? [])
           .filter((s) => s.expense_id === e.id)
           .map((s) => ({
@@ -187,12 +196,25 @@ const RecentExpenses = () => {
                   className="rounded-lg border border-border p-3 transition-shadow hover:shadow-md"
                 >
                   <div className="flex items-start gap-3">
-                    <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-primary/10">
-                      <CreditCard className="h-4 w-4 text-primary" />
+                    <div
+                      className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-primary/10"
+                      style={activity.category_color ? { backgroundColor: `${activity.category_color}20` } : undefined}
+                    >
+                      {activity.category_icon ? (
+                        <CategoryIcon iconName={activity.category_icon} color={activity.category_color} size={16} />
+                      ) : (
+                        <CreditCard className="h-4 w-4 text-primary" />
+                      )}
                     </div>
                     <div className="flex-1 min-w-0">
                       <div className="flex items-center gap-2 flex-wrap">
                         <p className="text-sm font-semibold text-foreground truncate">{activity.title}</p>
+                        {activity.category_name && (
+                          <Badge variant="outline" className="text-[10px] px-1.5 py-0 shrink-0 gap-1">
+                            <CategoryIcon iconName={activity.category_icon} color={activity.category_color} size={10} />
+                            {activity.category_name}
+                          </Badge>
+                        )}
                         <Badge variant="secondary" className="text-[10px] px-1.5 py-0 shrink-0">
                           {splitTypeLabel(activity.split_type)}
                         </Badge>
@@ -277,7 +299,7 @@ const RecentExpenses = () => {
       <EditExpenseDialog
         open={!!editExpense}
         onOpenChange={(open) => { if (!open) { setEditExpense(null); fetchActivities(); } }}
-        expense={editExpense ? { id: editExpense.id, title: editExpense.title, amount: editExpense.amount, split_type: editExpense.split_type, group_id: editExpense.group_id, paid_by: editExpense.paid_by_id } : null}
+        expense={editExpense ? { id: editExpense.id, title: editExpense.title, amount: editExpense.amount, split_type: editExpense.split_type, group_id: editExpense.group_id, paid_by: editExpense.paid_by_id, category_id: editExpense.category_id } : null}
       />
     </>
   );
