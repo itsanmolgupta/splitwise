@@ -31,7 +31,7 @@ export function AppSidebar() {
         {/* Logo */}
         <SidebarMenu>
           <SidebarMenuItem>
-            <SidebarMenuButton asChild className="hover:bg-transparent active:bg-transparent">
+            <SidebarMenuButton asChild className="hover:bg-transparent active:bg-transparent group-data-[collapsible=icon]:!size-10 group-data-[collapsible=icon]:!p-0 group-data-[collapsible=icon]:justify-center">
               <div className="flex items-center gap-2">
                 <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-primary">
                   <Wallet className="h-4 w-4 text-primary-foreground" />
@@ -87,13 +87,16 @@ export function AppSidebar() {
         <div className="border-t border-border pt-3">
           <SidebarMenu>
             <SidebarMenuItem>
-              <SidebarMenuButton className="h-auto py-2" onClick={signOut}>
+              <SidebarMenuButton
+                className="h-auto py-2 group-data-[collapsible=icon]:!size-10 group-data-[collapsible=icon]:!p-0 group-data-[collapsible=icon]:justify-center"
+                onClick={signOut}
+              >
                 <Avatar className="h-8 w-8 shrink-0">
                   <AvatarFallback className="bg-primary/20 text-primary text-xs font-semibold">
                     {initials}
                   </AvatarFallback>
                 </Avatar>
-                <div className="truncate">
+                <div className="truncate group-data-[collapsible=icon]:hidden">
                   <p className="truncate text-sm font-medium text-foreground">{userName}</p>
                   <p className="truncate text-xs text-muted-foreground">{userEmail}</p>
                 </div>
