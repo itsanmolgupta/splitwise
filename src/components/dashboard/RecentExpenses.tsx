@@ -209,6 +209,12 @@ const RecentExpenses = () => {
                     <div className="flex-1 min-w-0">
                       <div className="flex items-center gap-2 flex-wrap">
                         <p className="text-sm font-semibold text-foreground truncate">{activity.title}</p>
+                        {activity.category_name && (
+                          <Badge variant="outline" className="text-[10px] px-1.5 py-0 shrink-0 gap-1">
+                            <CategoryIcon iconName={activity.category_icon} color={activity.category_color} size={10} />
+                            {activity.category_name}
+                          </Badge>
+                        )}
                         <Badge variant="secondary" className="text-[10px] px-1.5 py-0 shrink-0">
                           {splitTypeLabel(activity.split_type)}
                         </Badge>
@@ -293,7 +299,7 @@ const RecentExpenses = () => {
       <EditExpenseDialog
         open={!!editExpense}
         onOpenChange={(open) => { if (!open) { setEditExpense(null); fetchActivities(); } }}
-        expense={editExpense ? { id: editExpense.id, title: editExpense.title, amount: editExpense.amount, split_type: editExpense.split_type, group_id: editExpense.group_id, paid_by: editExpense.paid_by_id } : null}
+        expense={editExpense ? { id: editExpense.id, title: editExpense.title, amount: editExpense.amount, split_type: editExpense.split_type, group_id: editExpense.group_id, paid_by: editExpense.paid_by_id, category_id: editExpense.category_id } : null}
       />
     </>
   );
