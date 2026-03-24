@@ -367,6 +367,26 @@ const AddExpenseDialog = ({ open, onOpenChange }: AddExpenseDialogProps) => {
             </Select>
           </div>
 
+          {/* Category */}
+          <div className="space-y-2">
+            <Label>Category</Label>
+            <Select value={selectedCategory} onValueChange={setSelectedCategory}>
+              <SelectTrigger>
+                <SelectValue placeholder="Select a category (optional)" />
+              </SelectTrigger>
+              <SelectContent>
+                {categories.map((c) => (
+                  <SelectItem key={c.id} value={c.id}>
+                    <div className="flex items-center gap-2">
+                      <CategoryIcon iconName={c.icon} color={c.color} size={14} />
+                      <span>{c.name}</span>
+                    </div>
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+          </div>
+
           {/* Title */}
           <div className="space-y-2">
             <Label htmlFor="exp-title">Title</Label>
