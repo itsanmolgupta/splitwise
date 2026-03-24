@@ -196,8 +196,15 @@ const RecentExpenses = () => {
                   className="rounded-lg border border-border p-3 transition-shadow hover:shadow-md"
                 >
                   <div className="flex items-start gap-3">
-                    <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-primary/10">
-                      <CreditCard className="h-4 w-4 text-primary" />
+                    <div
+                      className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-primary/10"
+                      style={activity.category_color ? { backgroundColor: `${activity.category_color}20` } : undefined}
+                    >
+                      {activity.category_icon ? (
+                        <CategoryIcon iconName={activity.category_icon} color={activity.category_color} size={16} />
+                      ) : (
+                        <CreditCard className="h-4 w-4 text-primary" />
+                      )}
                     </div>
                     <div className="flex-1 min-w-0">
                       <div className="flex items-center gap-2 flex-wrap">
