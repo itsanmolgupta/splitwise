@@ -24,6 +24,8 @@ import {
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Switch } from "@/components/ui/switch";
 import { Loader2, AlertCircle } from "lucide-react";
+import { useCategories } from "@/hooks/useCategories";
+import CategoryIcon from "@/components/dashboard/CategoryIcon";
 
 interface Group {
   id: string;
@@ -52,8 +54,10 @@ interface AddExpenseDialogProps {
 const AddExpenseDialog = ({ open, onOpenChange }: AddExpenseDialogProps) => {
   const { user } = useAuth();
   const queryClient = useQueryClient();
+  const { categories } = useCategories();
   const [groups, setGroups] = useState<Group[]>([]);
   const [selectedGroup, setSelectedGroup] = useState("");
+  const [selectedCategory, setSelectedCategory] = useState("");
   const [members, setMembers] = useState<GroupMember[]>([]);
   const [title, setTitle] = useState("");
   const [amount, setAmount] = useState("");
