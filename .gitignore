@@ -23,5 +23,10 @@ dist-ssr
 *.sln
 *.sw?
 
+#Environment Files
+.env
+
 # Supabase Config File
 supabase/config.toml
+
+
